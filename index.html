@@ -1,48 +1,97 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="utf-8">
-    <title>Mini App — Заголовок</title>
-    <style>
-        html {
-            background-image: url('../background.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: top;
-            background-attachment: fixed;
-        }
-        body {
+<!doctype html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="utf-8"> 
+    <title>StarFallz</title> 
+    <style> 
+        body { 
+            background-color: #171717;
             margin: 0;
             padding: 0;
-            overflow: scroll;
         }
-        #scenery {
-            background-image: url('../scenery.png');
+        @media (min-aspect-ratio: 1) {
+            #bg {
+                width: 70%;
+            }
+        }
+
+        /* Окружение и декорации */
+        #bg {
+            z-index: 0;
+            background-image: url('background.png');
             background-size: cover;
             background-repeat: no-repeat;
+            background-position: bottom;
+            background-attachment: fixed; 
+            padding: 0;
+            margin: 0 auto;
             height: 100vh;
         }
-        /*Стили для смартфонов*/
-        @media screen and (max-device-width:480px){
+        #bg-city {
+            z-index: 1;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            margin: 0 0 0 0;
+            padding: 0;
         }
-        /*Стили для планшетов*/
-        @media screen and (min-device-width:481px){
+        #bg-city img {
+            width: 100%;
         }
-        /*Стили для десктопов*/
-        @media screen and (min-width:769px){
+        #bg-scenery {
+            z-index: 2;
+            position: relative;
+            top: 0; left: 0; right: 0; bottom: 0;
+            min-height: 1400px; 
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
         }
-    </style>
-</head>
-<body>
-    <div id="scenery"></div>
-    <script>
-        // Telegram Web App API доступна внутри WebView как window.Telegram?.WebApp
-        const tg = window.Telegram && window.Telegram.WebApp;
-        if (tg) {
-            tg.ready(); // уведомляем Telegram, что приложение готово
-        } else { // При необходимости можно прочитать initData: tg.initData, tg.initDataUnsafe
-            console.log('Запущено вне Telegram Web App');
+        #bg-scenery img {
+            width: 100%;
         }
-    </script>
-</body>
+        
+        /* Интерфейс */
+        #top-ui {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;          /* Последний слой, элемент пользовательского интерфейса, всегда поверх*/
+            width: 200px;
+            height: 30px;
+            background-color: #FFFFFF;
+            border-radius: 100px;
+            box-shadow: 0px 0px 10px #A0A0A0;
+            opacity: 0.5;
+        }
+    </style> 
+</head> 
+<body> 
+    <div id="bg">
+        <div id="bg-city"><img src="city.png" alt=""/></div>
+        <div id="bg-scenery"><img src="scenery.png" alt=""/></div>
+    </div>
+    <div id="top-ui"></div>
+    <div id="bottom-ui"></div>
+    
+    </div>
+    <script>  
+        const tg = window.Telegram && window.Telegram.WebApp; 
+        if (tg) { 
+            tg.ready();
+        } else {
+            console.log('Запущено вне Telegram Web App'); 
+        }
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY; // Положение прокрутки
+            const bgCity = document.getElementById('bg-city');
+            
+            // Рассчитываем новое значение для background-position
+            const newPosition = scrollPosition * 0.15; // Скорость = 0.2 от скорости прокрутки
+            
+            // Применяем новое значение
+            bgCity.style.margin = `${newPosition}px 0 0 0`;
+        });
+    </script> 
+</body> 
 </html>
