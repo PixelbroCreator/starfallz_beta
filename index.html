@@ -53,16 +53,20 @@
         /* Интерфейс */
         #top-ui {
             position: fixed;
-            top: 30px;
+            top: 45px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 100;          /* Последний слой, элемент пользовательского интерфейса, всегда поверх*/
             width: 200px;
             height: 30px;
-            background-color: #FFFFFF;
+            background-color: rgba(0, 0, 0, 0.15);
             border-radius: 100px;
-            box-shadow: 0px 0px 10px #A0A0A0;
-            opacity: 0.5;
+            backdrop-filter: blur(15px);
+        }
+        #top-ui p {
+            color: #FFFFFF;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: small;
         }
     </style> 
 </head> 
@@ -71,7 +75,9 @@
         <div id="bg-city"><img src="city.png" alt=""/></div>
         <div id="bg-scenery"><img src="scenery.png" alt=""/></div>
     </div>
-    <div id="top-ui"></div>
+    <div id="top-ui"><!--
+        <p><b>Звезды</b></p>-->
+    </div>
     <div id="bottom-ui"></div>
     
     </div>
