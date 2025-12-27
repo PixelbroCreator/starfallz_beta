@@ -4,10 +4,29 @@
     <meta charset="utf-8"> 
     <title>StarFallz - Бесплатные звезды Телеграм</title> 
     <style>
+        /* Используемые рифты */
         @font-face {
             font-family: 'FindSansPro-Regular';
             src: url('FindSansPro-Regular.ttf') format('truetype');
             font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FindSansPro-Light';
+            src: url('FindSansPro-Light.ttf') format('truetype');
+            font-weight: lighter;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FindSansPro-Medium';
+            src: url('FindSansPro-Medium.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'FindSansPro-Bold';
+            src: url('FindSansPro-Bold.ttf') format('truetype');
+            font-weight: bolder;
             font-style: normal;
         }
 
@@ -88,6 +107,7 @@
             box-shadow: 0 5px 40px 0 rgba(246, 136, 11, 0.7);
             transition: background-position 0.5s ease, box-shadow 0.5s ease, padding 0.5s ease;
             padding: 12px 22px;
+            cursor: pointer;
         }
         #button_ad:active {
             padding: 6px 16px;
@@ -114,7 +134,7 @@
         }
         #top-ui p {
             color: #FFFFFF;
-            font-family: 'FindSansPro-Regular';
+            font-family: 'FindSansPro-Light';
             font-size: small;
         }
         #top-ui img {
@@ -136,8 +156,9 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 100;
-            width: 90%;
-            height: 50px;
+            max-width: 90%;
+            max-height: 50px;
+            padding: 5px 40px;
 
             display: flex;
             align-items: center;
@@ -150,15 +171,19 @@
         #bottom-ui img {
             width: 35px;
             height: 35px;
-            margin: 1px 5px;
-            transition: width 0.5s ease, height 0.5s ease;
+            margin: 1px 10%;
+            filter: drop-shadow(0);
+            transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease, box-shadow 0.5s ease;
             opacity: 0.7;
         }
         #bottom-ui img:hover {
             width: 40px;
             height: 40px;
-            margin: 1px 5px;
-            transition: width 0.25s ease, height 0.25s ease;
+            margin: 1px 10%;
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+            cursor: pointer;
+            transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease;
+            opacity: 0.9;
         }
     </style> 
 </head> 
@@ -177,10 +202,11 @@
         <img src="ui-token.png"/>
     </div>
     <div id="bottom-ui">
-        <img src="bottom-ui-star.png" />
+        <img id="bottom-ui-income" src="bottom-ui-income.png"/>
+        <img id="bottom-ui-star" src="bottom-ui-star.png" />
+        <img id="bottom-ui-set" src="bottom-ui-set.png" />
     </div>
     
-    </div>
     <script>  
         const tg = window.Telegram && window.Telegram.WebApp; 
         if (tg) { 
@@ -204,6 +230,33 @@
             // Применение значений новых положений
             bgCity.style.margin = `${newPosition_bg}px 0 0 0`;
             adButton.style.margin = `${newPosition_adbutton}px 0 0 0`;
+        });
+
+        // Кластер функций мягкой прокрутки при использовании bottom-ui
+        document.addEventListener('DOMContentLoaded', function() {
+            const income_image = document.getElementById('bottom-ui-income');
+            const income_targetSection = document.getElementById('');
+            const star_image = document.getElementById('bottom-ui-star');
+            const set_image = document.getElementById('bottom-ui-set');
+
+            income_image.addEventListener('click', function() {
+                income_targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+            star_image.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            set_image.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 1000000000,
+                    behavior: 'smooth'
+                });
+            });
         });
     </script> 
 </body> 
