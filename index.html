@@ -2,9 +2,17 @@
 <html lang="ru"> 
 <head> 
     <meta charset="utf-8"> 
-    <title>StarFallz</title> 
-    <style> 
+    <title>StarFallz - Бесплатные звезды Телеграм</title> 
+    <style>
+        @font-face {
+            font-family: 'FindSansPro-Regular';
+            src: url('FindSansPro-Regular.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body { 
+            position: relative;
             background-color: #171717;
             margin: 0;
             padding: 0;
@@ -47,38 +55,130 @@
             padding: 0;
         }
         #bg-scenery img {
+            z-index: 4;
             width: 100%;
         }
         
         /* Интерфейс */
-        #top-ui {
+        #button_ad { /* Кнопка просмотра рекламы */
+            position: absolute;
+            z-index: 3;
+            top: 30%; left: 52%;
+            transform: translateX(-50%);
+            width: 35%;
+            margin: 0 0 0 0;
+            padding: 10px 20px;
+
+            color: #2e0606;
+            text-align: center;
+            font-family: 'FindSansPro-Regular';
+            font-size: large;
+
+            border-radius: 25px;
+            background-color: #e5c319;
+            background-size: 150% auto;
+            background-position: left center;
+            background-image: linear-gradient(to right, #eb9b23 0%, #e5c319 50%, #eea928 100%);
+            border: 0;
+            box-shadow: 0 5px 15px 0 rgba(246, 152, 11, 0.7);
+            transition: background-position 0.5s ease, box-shadow 0.5s ease, padding 0.5s ease;
+        }
+        #button_ad:hover {
+            background-position: right center;
+            box-shadow: 0 5px 40px 0 rgba(246, 136, 11, 0.7);
+            transition: background-position 0.5s ease, box-shadow 0.5s ease, padding 0.5s ease;
+            padding: 12px 22px;
+        }
+        #button_ad:active {
+            padding: 6px 16px;
+            background-position: left center;
+            transition: background-position 0.25s ease, box-shadow 0.25s ease, padding 0.25s ease, margin 0.25s ease;
+        }
+
+        #top-ui { /* Верхний пользовательский интерфейс (балланс) */
             position: fixed;
-            top: 46px;
+            top: 47px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 100;          /* Последний слой, элемент пользовательского интерфейса, всегда поверх*/
+            z-index: 100;
             width: 200px;
-            height: 30px;
-            background-color: rgba(0, 0, 0, 0.2);
+            height: 29px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: rgba(0, 0, 0, 0.23);
             border-radius: 100px;
             backdrop-filter: blur(10px);
         }
         #top-ui p {
             color: #FFFFFF;
-            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-family: 'FindSansPro-Regular';
             font-size: small;
+        }
+        #top-ui img {
+            width: 16px;
+            height: 16px;
+            margin: 1px 5px;
+            transition: width 0.5s ease, height 0.5s ease;
+        }
+        #top-ui img:hover {
+            width: 20px;
+            height: 20px;
+            margin: 1px 5px;
+            transition: width 0.25s ease, height 0.25s ease;
+        }
+
+        #bottom-ui { /* Нижний пользовательский интерфейс (навигационное меню) */
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 90%;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: rgba(0, 0, 0, 0.23);
+            border-radius: 100px;
+            backdrop-filter: blur(10px);
+        }
+        #bottom-ui img {
+            width: 35px;
+            height: 35px;
+            margin: 1px 5px;
+            transition: width 0.5s ease, height 0.5s ease;
+            opacity: 0.7;
+        }
+        #bottom-ui img:hover {
+            width: 40px;
+            height: 40px;
+            margin: 1px 5px;
+            transition: width 0.25s ease, height 0.25s ease;
         }
     </style> 
 </head> 
 <body> 
     <div id="bg">
         <div id="bg-city"><img src="city.png" alt=""/></div>
-        <div id="bg-scenery"><img src="scenery.png" alt=""/></div>
+        <div id="bg-scenery">
+            <button id="button_ad">Смотреть рекламу</button>
+            <img src="scenery.png" alt=""/>
+        </div>
     </div>
-    <div id="top-ui"><!--
-        <p><b>Звезды</b></p>-->
+    <div id="top-ui">
+        <p><b>Звезды</b></p>
+        <img src="ui-star.png"/>
+        <p><b>Жетоны</b></p>
+        <img src="ui-token.png"/>
     </div>
-    <div id="bottom-ui"></div>
+    <div id="bottom-ui">
+        <img src="bottom-ui-star.png" />
+    </div>
     
     </div>
     <script>  
@@ -88,15 +188,22 @@
         } else {
             console.log('Запущено вне Telegram Web App'); 
         }
+
+        // Функция рассчета параллакса (отклик на прокрутку)
         window.addEventListener('scroll', function() {
-            const scrollPosition = window.scrollY; // Положение прокрутки
+            const scrollPosition = window.scrollY;
+
+            // Находим элементы и слои параллакса
             const bgCity = document.getElementById('bg-city');
+            const adButton = document.getElementById('button_ad');
             
-            // Рассчитываем новое значение для background-position
-            const newPosition = scrollPosition * 0.15; // Скорость = 0.2 от скорости прокрутки
-            
-            // Применяем новое значение
-            bgCity.style.margin = `${newPosition}px 0 0 0`;
+            // Рассчитываем новые значения положения элементов параллакса
+            const newPosition_bg = scrollPosition * 0.15;
+            const newPosition_adbutton = scrollPosition * 0.07;
+
+            // Применение значений новых положений
+            bgCity.style.margin = `${newPosition_bg}px 0 0 0`;
+            adButton.style.margin = `${newPosition_adbutton}px 0 0 0`;
         });
     </script> 
 </body> 
